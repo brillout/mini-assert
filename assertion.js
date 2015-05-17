@@ -9,22 +9,25 @@ var assertion = {
     },
     warning: function(bool,msg) {
         //use this function to bring to attention a warning
-        test(bool, msg, 'WARNING');
+        test(bool, msg, 'WARNING', true);
     },
     on_error: null
 };
 
 export default assertion;
 
-function test(bool, msg, msg_prefix){
+function test(bool, msg, msg_prefix, is_not_critical){
     if( bool )
         return;
 
-    communicateToDev(
+    var msg =
         msg_prefix+': ' +
         get_calling_fct_info() +
-        (msg?(': '+msg):'')
-    );
+        (msg?(': '+msg):'');
+
+    communicateToDev(
+        msg,
+        is_not_critical);
 }
 
 function get_calling_fct_info(){ 
@@ -62,12 +65,12 @@ function get_calling_fct_info(){
     return fct_name+'['+fct_location+']';
 } 
 
-function communicateToDev(msg){ 
+function communicateToDev(msg, is_not_critical){ 
     if( assertion.on_error ) {
         assertion.on_error(msg);
     }
 
-    if( window && window.location && window.location.hostname && window.location.hostname==='localhost' ) {
+    if( (window.location||{}).hostname==='localhost' && !is_not_critical ) {
         alert(msg);
         throw msg;
     }
