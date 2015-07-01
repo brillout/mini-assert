@@ -1,9 +1,8 @@
 {
-  "main": "assertion.js",
-  "jspm": {
-    "directories": {
-      "baseURL": "."
-    },
-    "dependencies": {}
-  }
+  "main": "assert.js",
+  "name": "mini-assert",
+  "version": "1.0.1",
+  "description": "a mini(malistic) assertion library",
+  "keywords": ["assert"],
+  "repository": "github:brillout/mini-assert"
 }
