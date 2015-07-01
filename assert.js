@@ -1,29 +1,33 @@
-var assertion = {
-    assert: function(bool,msg) {
-        //use this function to bring to attention an unexpected code execution
+// use this function to bring to attention an unexpected code execution, i.e. a bug
+var assert =
+    function(bool,msg) {
         test(bool, msg, 'ASSERTION-FAIL');
-    },
-    expect: function(bool,msg) {
-        //use this function to bring to attention a wrong usage of a function
-        test(bool, msg, 'WRONG-USAGE');
-    },
-    warning: function(bool,msg) {
-        //use this function to bring to attention a warning
-        test(bool, msg, 'WARNING', true);
-    },
-    on_error: null
-};
+    };
 
-export default assertion;
+// use this function to bring to attention a wrong usage of an API
+assert.expect =
+    function(bool,msg) {
+        test(bool, msg, 'WRONG-USAGE');
+    };
+
+// use this function to bring to attention a warning, i.e. something non-critical
+assert.warning =
+    function(bool,msg) {
+        test(bool, msg, 'WARNING', true);
+    };
+
+assert.onerror = null;
+
+module.exports = assert;
 
 function test(bool, msg, msg_prefix, is_not_critical){
     if( bool )
         return;
 
     var msg =
-        msg_prefix+': ' +
+        msg_prefix + ': ' +
         get_calling_fct_info() +
-        (msg?(': '+msg):'');
+        ( msg ? ( ': ' + msg) : '');
 
     communicateToDev(
         msg,
@@ -66,15 +70,15 @@ function get_calling_fct_info(){
 } 
 
 function communicateToDev(msg, is_not_critical){ 
-    if( assertion.on_error ) {
-        assertion.on_error(msg);
+    if( assert.onerror ) {
+        assert.onerror(msg);
     }
 
-    if( (window.location||{}).hostname==='localhost' && !is_not_critical ) {
-        alert(msg);
+    if( ( typeof location === "undefined" || location.hostname==='localhost' ) && !is_not_critical ) {
+        typeof alert !== "undefined" && alert(msg);
         throw msg;
     }
     else {
-        window.console&&window.console.log&&window.console.log(msg);
+        typeof console !== "undefined" && console.log && console.log(msg);
     }
 } 
