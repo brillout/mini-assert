@@ -1,7 +1,7 @@
 {
   "main": "assert.js",
   "name": "mini-assert",
-  "version": "1.0.2",
+  "version": "1.0.7",
   "description": "a mini(malistic) assertion library",
   "keywords": ["assert"],
   "repository": "github:brillout/mini-assert"
